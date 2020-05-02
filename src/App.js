@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import firebase from './services/firebase';
+import GlobalStyle from './Styles/global';
 
-function App() {
+import Header from './Components/Header';
+import Home from './Pages/Home';
+
+export default function App() {
+
+  const [firebaseInicialized, setFirebaseInicialized] = useState(false);
+
+  useEffect(() => {
+    firebase.isInitialized().then(resultado => {
+      //return the user
+      setFirebaseInicialized(resultado);
+    })
+  }, [])
+
   return (
-    <div className="App">
-      <h1>eae</h1>
-    </div>
+    <BrowserRouter>
+      <GlobalStyle />
+      <Header />
+      <Switch>
+        <Route exact path='/' component={Home} />
+      </Switch>
+    </BrowserRouter>
   );
 }
-
-export default App;
