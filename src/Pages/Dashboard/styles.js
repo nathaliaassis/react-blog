@@ -41,6 +41,43 @@ export const Formulario = styled.form`
     height: 36px;
     margin: 4px 0 16px;
     padding: 5px 12px;
+
+
+    &.input-file{
+      transition: all 1s;
+
+      &:hover{
+        
+        cursor: pointer;
+        &::-webkit-file-upload-button{
+          background-color: #151516;
+          color: white;
+          cursor: pointer;
+        }
+      }
+      &::-webkit-file-upload-button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 8px;
+        background: transparent;
+        border: 1px solid #151516;
+        border-radius: 4px;
+        transition: all .5s;
+
+
+        font-weight: 300;
+        color: #151516;
+        text-transform: uppercase;
+      }
+    }
+  }
+  .img-carregada{
+    display: flex;
+    width: 100%;
+    height: auto; 
+    margin-bottom:16px;
+    border-radius: 5px;
   }
   textarea{
     border: 1px solid #CECECE;

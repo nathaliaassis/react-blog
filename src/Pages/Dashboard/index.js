@@ -13,16 +13,20 @@ class Dashboard extends Component {
       titulo: '',
       descricao: '',
       img: '',
+      urlImg: '',
       msgError: '',
+      progress: '',
     }
 
     this.postar = this.postar.bind(this);
+    this.handleUpload = this.handleUpload.bind(this);
+    this.handleFile = this.handleFile.bind(this);
   }
   componentDidMount()
   /*verifica se tem um usuário logado, 
   se não tiver redireciona para a tela de login*/{
     if(!firebase.getCurrent()){
-      return this.props.history.replace('/login');
+      return this.props.history.replace('/');
     }
     // pega o nome do user
     firebase.getUserName(i => {
@@ -35,14 +39,15 @@ class Dashboard extends Component {
     // vertifica se todos os planos estão preenchidos
     if(this.state.titulo !== '' && 
           this.state.img !== '' && 
-          this.state.descricao !== ''
+          this.state.descricao !== '' &&
+          this.state.url !== ''
       ){
       let posts = firebase.app.ref('posts');
       let key = posts.push().key;
 
       await posts.child(key).set({
         titulo: this.state.titulo,
-        image: this.state.img,
+        image: this.state.urlImg,
         descricao: this.state.descricao,
         autor: localStorage.nome
       });
@@ -50,6 +55,37 @@ class Dashboard extends Component {
     }else{
       this.setState({msgError: 'Preencha todos os campos!'})
     }
+  }
+  handleFile = async (e) => {
+    if(e.target.files[0]){
+      const image = e.target.files[0];
+      if(image.type === 'image/png' || image.type === 'image/jpeg'){
+        await this.setState({img: image});
+        await this.handleUpload();
+      }else{
+        alert('Envie uma imagem do tipo PNG ou JPG');
+        this.setState({img: null});
+        return null;
+      }
+    }
+  }
+
+  handleUpload = async () => {
+    const {img} = this.state;
+    const currentUid = firebase.getCurrentUid();
+
+    const uploadTasks = firebase.storage.ref(`images/${currentUid}/${img.name}`).put(img);
+    await uploadTasks.on('state_changed', snapshot =>{
+      const progress = Math.round(snapshot.bytesTransferred / snapshot.totalBytes * 100);
+      this.setState({progress});
+    }, error =>{
+      console.log('Erro ao carregar imagem:' + error.message )
+    }, ()=>{
+      firebase.storage.ref(`images/${currentUid}`).child(img.name).getDownloadURL()
+      .then(url => {
+        this.setState({urlImg: url});
+      })
+    })
   }
 
   render() {
@@ -79,11 +115,19 @@ class Dashboard extends Component {
             <label>URL da Imagem</label>
             <input 
               type='file'
-              placeholder='Cole a URL da imagem'
-              autoComplete='off'
-              value={this.state.img}
-              onChange={e => this.setState({img: e.target.value})}
+              className='input-file'
+              onChange={this.handleFile}
             />
+            <div>
+              {this.state.urlImg ?
+                <img 
+                  src={this.state.urlImg} 
+                  alt= 'imagem carregada' 
+                  className='img-carregada'  
+                /> : 
+                this.state.progress
+              }
+            </div>
             <label>Descrição</label>
             <textarea 
               type='text'
@@ -92,11 +136,11 @@ class Dashboard extends Component {
               value={this.state.descricao}
               onChange={e => this.setState({descricao: e.target.value})}
             />
-             <Btn
-                type='submit'
-              >
-                Postar
-              </Btn>
+            <Btn
+              type='submit'
+            >
+              Postar
+            </Btn>
           </Formulario>
         }
       </Container>

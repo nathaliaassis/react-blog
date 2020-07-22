@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import firebase from './services/firebase';
-import GlobalStyle from './Styles/global';
+import './Styles/global.css';
 
 import Header from './Components/Header';
 import Home from './Pages/Home';
@@ -23,7 +23,6 @@ export default function App() {
   return (
     firebaseInicialized !== false ? (
       <BrowserRouter>
-        <GlobalStyle />
         <Header />
         <Switch>
           <Route exact path='/' component={Home} />

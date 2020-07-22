@@ -13,6 +13,7 @@ export const Container = styled.section`
         display: flex;
         flex-direction: column;
         max-width: 700px;
+        width: 100%;
         border: 1px solid #CECECE;
         border-radius: 5px;
         padding: 24px 0;
