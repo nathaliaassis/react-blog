@@ -9,8 +9,11 @@ export default createGlobalStyle`
         box-sizing: border-box;
         font-family: 'Montserrat', sans-serif;
     } 
-    html, body, #root{
-        flex:1;
-        background-color: #f4f4f4;
+     #root{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        flex: 1;
     }
 `;

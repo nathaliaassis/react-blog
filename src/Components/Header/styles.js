@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Background = styled.header`
     display: flex;
     margin: 0 auto;
-    padding: 16px;
+    padding: 16px 32px;
     height: 72px;
     width: 100%;
     background-color: #151516;
@@ -29,5 +29,9 @@ export const Container = styled.div`
         font-weight: 300;
         color: white;
         text-decoration: none;
+    }
+    a.sair{
+        font-size: 16px;
+        margin-left: 24px;
     }
 `;
