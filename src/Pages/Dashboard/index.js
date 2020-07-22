@@ -18,13 +18,13 @@ class Dashboard extends Component {
 
     this.postar = this.postar.bind(this);
   }
-  //verifica se tem um usuário logado, 
-  //se não tiver redireciona para a tela de login
-  componentDidMount(){
+  componentDidMount()
+  /*verifica se tem um usuário logado, 
+  se não tiver redireciona para a tela de login*/{
     if(!firebase.getCurrent()){
       return this.props.history.replace('/login');
     }
-
+    // pega o nome do user
     firebase.getUserName(i => {
       localStorage.nome = i.val().nome;
       this.setState({nome: localStorage.nome});
@@ -32,8 +32,11 @@ class Dashboard extends Component {
   }
 
   postar = async () => {
-
-    if(this.state.titulo !== '' && this.state.img !== '' && this.state.descricao !== ''){
+    // vertifica se todos os planos estão preenchidos
+    if(this.state.titulo !== '' && 
+          this.state.img !== '' && 
+          this.state.descricao !== ''
+      ){
       let posts = firebase.app.ref('posts');
       let key = posts.push().key;
 
@@ -75,7 +78,7 @@ class Dashboard extends Component {
             />
             <label>URL da Imagem</label>
             <input 
-              type='text'
+              type='file'
               placeholder='Cole a URL da imagem'
               autoComplete='off'
               value={this.state.img}
